@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public class util {
 
-	public int getPuertoTerminal() {
+	public static int getPuertoTerminal() {
 		Properties prop = new Properties();
 		try {
 			prop.load(new FileInputStream("propiedades.properties"));
@@ -18,7 +18,7 @@ public class util {
 		return Integer.parseInt(prop.get("puertoTerminales").toString());
 	}
 
-	public String getIdAgencia() {
+	public static String getIdAgencia() {
 		Properties prop = new Properties();
 		try {
 			prop.load(new FileInputStream("propiedades.properties"));
@@ -27,12 +27,12 @@ public class util {
 		return prop.get("idAgencia").toString();
 	}
 
-	public Date stringToDate(String fechaStr) throws ParseException {
+	public static Date stringToDate(String fechaStr) throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_hh:mm");
 		return format.parse(fechaStr);
 	}
 
-	public String dateToString(Date fecha) {
+	public static String dateToString(Date fecha) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_hh:mm");
 		return format.format(fecha);
 	}
