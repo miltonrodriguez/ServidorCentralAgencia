@@ -6,6 +6,8 @@ import java.util.Date;
 
 import javax.xml.rpc.ServiceException;
 
+import com.uy.antel.util.util;
+
 import antel.com.uy.webservices.DataTicket;
 import antel.com.uy.webservices.WsTicketServiceLocator;
 
@@ -22,13 +24,8 @@ public class ctrlWS {
 	
 	public DataTicket altaTicket(String matricual, Date fechaIniE, int cantMinutos, Date fechaVenta, String agencia) {
 		WsTicketServiceLocator wsIMM = new WsTicketServiceLocator();
-		Calendar calFechaIniE = Calendar.getInstance();
-		calFechaIniE.setTime(fechaIniE);
-		Calendar calFechaVenta = Calendar.getInstance();
-		calFechaVenta.setTime(fechaVenta);
-		
 		try {//TODO manejar las excepciones y agregar el id de la agenciad esde una property
-			DataTicket respuesta = wsIMM.getwsTicketPort().altaTicket(matricual,calFechaIniE, cantMinutos,calFechaVenta,agencia);
+			DataTicket respuesta = wsIMM.getwsTicketPort().altaTicket(matricual,util.dateToString(fechaIniE), cantMinutos,util.dateToString(fechaVenta),agencia);
 						
 			return respuesta;
 			

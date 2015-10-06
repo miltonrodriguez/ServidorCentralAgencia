@@ -8,5 +8,5 @@
 package antel.com.uy.webservices;
 
 public interface WsTicket extends java.rmi.Remote {
-    public antel.com.uy.webservices.DataTicket altaTicket(java.lang.String arg0, java.util.Calendar arg1, int arg2, java.util.Calendar arg3, java.lang.String arg4) throws java.rmi.RemoteException;
+    public antel.com.uy.webservices.DataTicket altaTicket(java.lang.String arg0, java.lang.String arg1, int arg2, java.lang.String arg3, java.lang.String arg4) throws java.rmi.RemoteException;
 }
