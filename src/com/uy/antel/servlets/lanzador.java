@@ -5,6 +5,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
+import com.uy.antel.controlador.levantarCtrlTerminal;
+
 /**
  * Servlet implementation class lanzador
  */
@@ -12,12 +14,16 @@ import javax.servlet.http.HttpServlet;
 public class lanzador extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * Default constructor. 
-     */
-    public lanzador() {
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * Default constructor.
+	 */
+	public lanzador() {
+		// TODO Auto-generated constructor stub
+
+		levantarCtrlTerminal lev = new levantarCtrlTerminal();
+		Thread t = new Thread(lev);
+		t.start();
+	}
 
 	/**
 	 * @see Servlet#init(ServletConfig)

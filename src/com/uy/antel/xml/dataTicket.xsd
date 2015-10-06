@@ -7,6 +7,7 @@
 					nillable="false" />
 				<xs:element name="mensaje" type="xs:string" />
 				<xs:element name="importeTotal" type="xs:positiveInteger" />
+				<xs:element name="nroTicket" type="xs:positiveInteger" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

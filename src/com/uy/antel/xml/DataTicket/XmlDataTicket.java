@@ -2,7 +2,7 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2015.09.28 a las 11:12:57 PM UYT 
+// Generado el: 2015.10.05 a las 09:33:10 PM GMT-03:00 
 //
 
 
@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="error" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="mensaje" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="importeTotal" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
+ *         &lt;element name="nroTicket" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -42,7 +43,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "error",
     "mensaje",
-    "importeTotal"
+    "importeTotal",
+    "nroTicket"
 })
 @XmlRootElement(name = "xmlDataTicket")
 public class XmlDataTicket {
@@ -55,6 +57,9 @@ public class XmlDataTicket {
     @XmlElement(required = true)
     @XmlSchemaType(name = "positiveInteger")
     protected BigInteger importeTotal;
+    @XmlElement(required = true)
+    @XmlSchemaType(name = "positiveInteger")
+    protected BigInteger nroTicket;
 
     /**
      * Obtiene el valor de la propiedad error.
@@ -126,6 +131,30 @@ public class XmlDataTicket {
      */
     public void setImporteTotal(BigInteger value) {
         this.importeTotal = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad nroTicket.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *     
+     */
+    public BigInteger getNroTicket() {
+        return nroTicket;
+    }
+
+    /**
+     * Define el valor de la propiedad nroTicket.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *     
+     */
+    public void setNroTicket(BigInteger value) {
+        this.nroTicket = value;
     }
 
 }

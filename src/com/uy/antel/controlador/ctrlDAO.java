@@ -25,7 +25,7 @@ public class ctrlDAO {
 			String matricula, int nroTerminal) throws Exception {
 
 		InitialContext initContext;
-		try {//todo: mejorar las excepciones
+		try {// todo: mejorar las excepciones
 			initContext = new InitialContext();
 
 			DataSource ds = (DataSource) initContext.lookup("java:jboss/datasources/MySqlAGENCIA");
@@ -51,14 +51,13 @@ public class ctrlDAO {
 				ps_auto.close();
 				ps_insert_ticket.close();
 				conn.close();
-			}
-			else{
+			} else {
 				rs_auto.close();
 				ps_auto.close();
 				conn.close();
-				//ERROR
+				// ERROR
 				throw new Exception("NO existe un auto con esa matricula en el sistema");
-				
+
 			}
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
@@ -69,11 +68,11 @@ public class ctrlDAO {
 		}
 
 	}
-	
+
 	public void altaAuto(String matricula) throws Exception {
 
 		InitialContext initContext;
-		try {//todo: mejorar las excepciones
+		try {// todo: mejorar las excepciones
 			initContext = new InitialContext();
 
 			DataSource ds = (DataSource) initContext.lookup("java:jboss/datasources/MySqlAGENCIA");
@@ -86,11 +85,9 @@ public class ctrlDAO {
 				rs_auto.close();
 				ps_auto.close();
 				conn.close();
-			}
-			else{
+			} else {
 				conn.setAutoCommit(false);
-				PreparedStatement ps_insert_auto = conn.prepareStatement(
-						"insert into auto (matricula) values (?)");
+				PreparedStatement ps_insert_auto = conn.prepareStatement("insert into auto (matricula) values (?)");
 				ps_insert_auto.setString(1, matricula);
 				ps_insert_auto.executeUpdate();
 				conn.commit();
@@ -106,6 +103,62 @@ public class ctrlDAO {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+	}
+
+	public boolean login(String usuario, String password, int nroTerminal) throws Exception {
+
+		InitialContext initContext;
+		try {// todo: mejorar las excepciones
+			initContext = new InitialContext();
+
+			DataSource ds = (DataSource) initContext.lookup("java:jboss/datasources/MySqlAGENCIA");
+			Connection conn = ds.getConnection();
+			PreparedStatement ps_usuario = conn
+					.prepareStatement("select * from usuario where usuario=? and password=?");
+			ps_usuario.setString(1, usuario);
+			ps_usuario.setString(2, password);
+			ResultSet rs_usuario = ps_usuario.executeQuery();
+			if (rs_usuario.next()) {
+				// Existe el usuario
+
+				PreparedStatement ps_rol_terminal = conn.prepareStatement(
+						"select t.nroTerminal from (((rol_usuario ru join rol ro on ru.fk_rol = ro.rol) join rol_terminal rt on rt.fk_rol = ro.rol) join on terminal t on rt.fk_terminal = t.nroTerminal) where ru.fk_usuario = ? and t.nroTerminal = ?");
+				ps_rol_terminal.setString(1, usuario);
+				ps_rol_terminal.setInt(2, nroTerminal);
+				ResultSet rs_rol_terminal = ps_rol_terminal.executeQuery();
+
+				if (rs_rol_terminal.next()) {
+					// El usuario se puede loguear en la terminal
+					rs_usuario.close();
+					ps_usuario.close();
+					rs_rol_terminal.close();
+					ps_rol_terminal.close();
+					conn.close();
+					return true;
+				}
+				//el usuario no se puede loguear en la terminal
+				rs_rol_terminal.close();
+				ps_rol_terminal.close();
+				rs_usuario.close();
+				ps_usuario.close();
+				conn.close();
+				throw new Exception("El usuario no se puede loguear en la terminal");
+			}
+			//El usuario no existe
+			rs_usuario.close();
+			ps_usuario.close();
+			conn.close();
+			throw new Exception("Usuario o password incorrecta");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
 		}
 
 	}

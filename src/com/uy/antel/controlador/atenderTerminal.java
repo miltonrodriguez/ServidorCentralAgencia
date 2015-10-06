@@ -68,10 +68,13 @@ public class atenderTerminal implements Runnable {
 				
 			} catch (SAXException e) {
 				// TODO Auto-generated catch block
+				System.out.println("SAXException"+ this.getClass());
 				e.printStackTrace();
+				
 			}
 			catch (JAXBException e) {
 				// TODO Auto-generated catch block
+				System.out.println("JAXException - "+ this.getClass());
 				e.printStackTrace();
 			}
 		}

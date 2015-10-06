@@ -1,13 +1,11 @@
 package com.uy.antel.controlador;
 
 import java.math.BigInteger;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 
 import com.uy.antel.xml.DataTicket.ObjectFactory;
+import com.uy.antel.util.util;
 import com.uy.antel.xml.AltaTicket.XmlAltaTicket;
 import com.uy.antel.xml.DataTicket.XmlDataTicket;
 
@@ -36,14 +34,15 @@ public class ctrlCentral {
 			ctrlWS ws = ctrlWS.getInstance();
 			Date fechaVenta = new Date();
 
-			DateFormat format = new SimpleDateFormat("yyyy-MM-dd_hh:mm");
-			Date fechaIniE = format.parse(xmlAltaT.getFechaHoraInicioEst());
+			
+			Date fechaIniE = util.stringToDate(xmlAltaT.getFechaHoraInicioEst());
 			int cantMinutos = xmlAltaT.getCantidadMinutos().intValue();
 			String matricula = xmlAltaT.getMatricula();
-			DataTicket respuesta = ws.altaTicket(matricula, fechaIniE, cantMinutos, fechaVenta, "abcdagencia");
+			DataTicket respuesta = ws.altaTicket(matricula, fechaIniE, cantMinutos, fechaVenta, util.getIdAgencia());
 			dataTicketResp.setError(BigInteger.valueOf(respuesta.getError()));
 			dataTicketResp.setMensaje(respuesta.getMensaje());
 			dataTicketResp.setImporteTotal(BigInteger.valueOf(respuesta.getImporteTotal()));
+			dataTicketResp.setNroTicket(BigInteger.valueOf(respuesta.getNroTicket()));
 			if (respuesta.getError() == 0) {
 				// Doy de alta el ticket en la BD
 				ctrlDAO dao = ctrlDAO.getInstance();
@@ -57,6 +56,7 @@ public class ctrlCentral {
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			System.out.println("Parse exception "+this.getClass());
 
 			dataTicketResp.setError(BigInteger.valueOf(100));
 			dataTicketResp.setMensaje("La fecha de inicio de estacionamiento no es valida");
@@ -64,7 +64,7 @@ public class ctrlCentral {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-
+			System.out.println("Exception "+this.getClass());
 			dataTicketResp.setError(BigInteger.valueOf(101));
 			dataTicketResp.setMensaje("Error al dar de alta el ticket");
 		}
