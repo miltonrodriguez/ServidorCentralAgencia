@@ -39,14 +39,15 @@ public class atenderTerminal implements Runnable {
 
 		while (true) {
 			try {
-				SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-				Schema schema;
-
-				schema = sf.newSchema(new File("src/com/uy/antel/xml/altaTicket.xsd"));
+//				SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+//				Schema schema;
+//
+//				schema = sf.newSchema(new File("src/com/uy/antel/xml/altaTicket.xsd"));
 				JAXBContext jaxbContext;
-				jaxbContext = JAXBContext.newInstance(XmlAltaTicket.class);
+//				jaxbContext = JAXBContext.newInstance(XmlAltaTicket.class);
+				jaxbContext = JAXBContext.newInstance("com.uy.antel.xml.AltaTicket");
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-				jaxbUnmarshaller.setSchema(schema);
+//				jaxbUnmarshaller.setSchema(schema);
 				//Hago la conversion de XML -> objeto AltaTicket.
 				XmlAltaTicket inAltaTicket = (XmlAltaTicket) jaxbUnmarshaller.unmarshal(in);
 				
@@ -66,10 +67,10 @@ public class atenderTerminal implements Runnable {
 				
 				
 				
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				System.out.println("SAXException"+ this.getClass());
-				e.printStackTrace();
+//			} catch (SAXException e) {
+//				// TODO Auto-generated catch block
+//				System.out.println("SAXException"+ this.getClass());
+//				e.printStackTrace();
 				
 			}
 			catch (JAXBException e) {
