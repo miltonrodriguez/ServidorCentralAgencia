@@ -27,68 +27,57 @@ public class atenderTerminal implements Runnable {
 	}
 
 	public void run() {
-		InputStream in = null;
-		OutputStream out = null;
+//		InputStream in = null;
+//		OutputStream out = null;
+		DataInputStream is = null;
+        DataOutputStream os = null;
 		try {
-			in = client.getInputStream();
-			out = client.getOutputStream();
+//			in = client.getInputStream();
+//			out = client.getOutputStream();
+			is = new DataInputStream(client.getInputStream());
+            os = new DataOutputStream(client.getOutputStream());
 		} catch (IOException e) {
 			System.out.println("in or out failed");
 			System.exit(-1);
 		}
+		try {
+			while (true) {
 
-		while (true) {
-			try {
-//				SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-//				Schema schema;
-//
-//				schema = sf.newSchema(new File("src/com/uy/antel/xml/altaTicket.xsd"));
 				JAXBContext jaxbContext;
-//				jaxbContext = JAXBContext.newInstance(XmlAltaTicket.class);
 				jaxbContext = JAXBContext.newInstance("com.uy.antel.xml.AltaTicket");
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-//				jaxbUnmarshaller.setSchema(schema);
-				//Hago la conversion de XML -> objeto AltaTicket.
-				XmlAltaTicket inAltaTicket = (XmlAltaTicket) jaxbUnmarshaller.unmarshal(in);
-				
+				// Hago la conversion de XML -> objeto AltaTicket.
+				XmlAltaTicket inAltaTicket = (XmlAltaTicket) jaxbUnmarshaller.unmarshal(new StringReader(is.readUTF()));
+
 				System.out.println("unmarshall");
 				System.out.println(inAltaTicket.getMatricula());
 				System.out.println(inAltaTicket.getCantidadMinutos());
 				System.out.println(inAltaTicket.getFechaHoraInicioEst());
-				
+
 				ctrlCentral central = ctrlCentral.getInstance();
 				XmlDataTicket outDataTicket = central.altaTicket(inAltaTicket);
-				
+
 				JAXBContext context = JAXBContext.newInstance("com.uy.antel.util.dataTicket");
 
 				Marshaller marshaller = context.createMarshaller();
 
-				marshaller.marshal(outDataTicket,out);
-				
-				
-				
-//			} catch (SAXException e) {
-//				// TODO Auto-generated catch block
-//				System.out.println("SAXException"+ this.getClass());
-//				e.printStackTrace();
-				
-			}
-			catch (JAXBException e) {
-				// TODO Auto-generated catch block
-				System.out.println("JAXException - "+ this.getClass());
-				e.printStackTrace();
-			}
+				StringWriter writer = new StringWriter();
+				marshaller.marshal(outDataTicket, writer);
+				os.writeUTF(writer.toString());
+
+				}
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			System.out.println("JAXException - " + this.getClass());
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("Exception - " + this.getClass());
+			e.printStackTrace();
 		}
+
 	}
 
-	// JTextArea.appendJTextArea.appendtextArea.append(line)synchronizedruntextArea.append(line)appendText(line)
-	//
-	// public synchronized void appendText(line){
-	// textArea.append(line);
-	// }
-
-	// synchronizedtextAreatextArea
-	//
 	// The finalize() method is called by the Java virtual machine (JVM)* before
 	// the program exits to give the program a chance to clean up and release
 	// resources. Multi-threaded programs should close all Files and Sockets
