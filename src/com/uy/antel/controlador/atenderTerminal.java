@@ -57,7 +57,7 @@ public class atenderTerminal implements Runnable {
 				ctrlCentral central = ctrlCentral.getInstance();
 				XmlDataTicket outDataTicket = central.altaTicket(inAltaTicket);
 
-				JAXBContext context = JAXBContext.newInstance("com.uy.antel.util.dataTicket");
+				JAXBContext context = JAXBContext.newInstance("com.uy.antel.xml.DataTicket");
 
 				Marshaller marshaller = context.createMarshaller();
 

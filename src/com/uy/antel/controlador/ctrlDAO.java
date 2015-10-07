@@ -37,13 +37,14 @@ public class ctrlDAO {
 				// Existe el auto
 				conn.setAutoCommit(false);
 				PreparedStatement ps_insert_ticket = conn.prepareStatement(
-						"insert into ticket (nroTicket,fechaVenta,fechaIniE,cantMinutos,ImporteTotal,fk_anulacion,fk_auto) values (?,?,?,?,?,?,?)");
+						"insert into ticket (nroTicket,fechaVenta,fechaIniE,cantMinutos,ImporteTotal,fk_auto) values (?,?,?,?,?,?)");
 				ps_insert_ticket.setInt(1, nroTicket);
 				ps_insert_ticket.setDate(2, new java.sql.Date(fechaVenta.getTime()));
 				ps_insert_ticket.setDate(3, new java.sql.Date(fechaIniE.getTime()));
 				ps_insert_ticket.setInt(4, cantMinutos);
 				ps_insert_ticket.setInt(5, importeTotal);
-				ps_insert_ticket.setString(7, matricula);
+				
+				ps_insert_ticket.setString(6, matricula);
 				ps_insert_ticket.executeUpdate();
 				conn.commit();
 				conn.setAutoCommit(true);

@@ -18,9 +18,7 @@ public class ctrlCentral {
 
 	public static ctrlCentral getInstance() {
 		if (instance == null) {
-			//Properties properties = new Properties();
-			//properties.load(getServletContext().getResourceAsStream("/WEB-INF/filename.properties"));
-			//instance = new ctrlCentral(itentificador);
+			instance = new ctrlCentral();
 			//TODO:seguir aca
 		}
 		return instance;
@@ -52,6 +50,7 @@ public class ctrlCentral {
 						respuesta.getImporteTotal(), matricula, xmlAltaT.getNroTerminal().intValue());
 
 			}
+			//todo: poner el error
 
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
