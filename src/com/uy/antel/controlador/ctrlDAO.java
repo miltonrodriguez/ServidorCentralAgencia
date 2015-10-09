@@ -30,7 +30,7 @@ public class ctrlDAO {
 
 			DataSource ds = (DataSource) initContext.lookup("java:jboss/datasources/MySqlAGENCIA");
 			Connection conn = ds.getConnection();
-			PreparedStatement ps_auto = conn.prepareStatement("select * from auto where matricula=?");
+			PreparedStatement ps_auto = conn.prepareStatement("select idAuto from auto where matricula=?");
 			ps_auto.setString(1, matricula);
 			ResultSet rs_auto = ps_auto.executeQuery();
 			if (rs_auto.next()) {
@@ -43,8 +43,7 @@ public class ctrlDAO {
 				ps_insert_ticket.setDate(3, new java.sql.Date(fechaIniE.getTime()));
 				ps_insert_ticket.setInt(4, cantMinutos);
 				ps_insert_ticket.setInt(5, importeTotal);
-				
-				ps_insert_ticket.setString(6, matricula);
+				ps_insert_ticket.setInt(6, rs_auto.getInt("idAuto"));
 				ps_insert_ticket.executeUpdate();
 				conn.commit();
 				conn.setAutoCommit(true);
@@ -88,11 +87,28 @@ public class ctrlDAO {
 				conn.close();
 			} else {
 				conn.setAutoCommit(false);
-				PreparedStatement ps_insert_auto = conn.prepareStatement("insert into auto (matricula) values (?)");
+				PreparedStatement ps_secuencia = conn.prepareStatement("select id from secuencias where nombre='auto'");
+				ResultSet rs_secuencia = ps_secuencia.executeQuery();
+				int secuencia;
+				if (rs_secuencia.next()) {
+					secuencia = rs_secuencia.getInt("secuencia");
+					secuencia++;
+				} else {
+					throw new SQLException("No se pudo conseguir la secuencia");
+				}
+				PreparedStatement ps_update_secuencia = conn
+						.prepareStatement("update secuencias set secuencia=? where nombre='auto'");
+				ps_update_secuencia.setInt(1, secuencia);
+				ps_update_secuencia.executeUpdate();
+				PreparedStatement ps_insert_auto = conn.prepareStatement("insert into auto (matricula, idAuto) values (?,?)");
 				ps_insert_auto.setString(1, matricula);
+				ps_insert_auto.setInt(2, secuencia);
 				ps_insert_auto.executeUpdate();
 				conn.commit();
 				conn.setAutoCommit(true);
+				rs_secuencia.close();
+				ps_secuencia.close();
+				ps_update_secuencia.close();
 				rs_auto.close();
 				ps_auto.close();
 				ps_insert_auto.close();
