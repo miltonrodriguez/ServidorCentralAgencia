@@ -117,9 +117,11 @@ public class ctrlDAO {
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new Exception("Error del sistema.");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new Exception("Error del sistema.");
 		}
 
 	}

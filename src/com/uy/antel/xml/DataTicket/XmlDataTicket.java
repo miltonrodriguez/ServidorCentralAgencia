@@ -2,7 +2,7 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2015.10.05 a las 09:33:10 PM GMT-03:00 
+// Generado el: 2015.10.12 a las 06:29:45 PM GMT-03:00 
 //
 
 
@@ -29,8 +29,8 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="error" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
  *         &lt;element name="mensaje" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="importeTotal" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
- *         &lt;element name="nroTicket" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
+ *         &lt;element name="importeTotal" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="nroTicket" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -54,12 +54,8 @@ public class XmlDataTicket {
     protected BigInteger error;
     @XmlElement(required = true)
     protected String mensaje;
-    @XmlElement(required = true)
-    @XmlSchemaType(name = "positiveInteger")
-    protected BigInteger importeTotal;
-    @XmlElement(required = true)
-    @XmlSchemaType(name = "positiveInteger")
-    protected BigInteger nroTicket;
+    protected int importeTotal;
+    protected int nroTicket;
 
     /**
      * Obtiene el valor de la propiedad error.
@@ -112,48 +108,32 @@ public class XmlDataTicket {
     /**
      * Obtiene el valor de la propiedad importeTotal.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
      */
-    public BigInteger getImporteTotal() {
+    public int getImporteTotal() {
         return importeTotal;
     }
 
     /**
      * Define el valor de la propiedad importeTotal.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
      */
-    public void setImporteTotal(BigInteger value) {
+    public void setImporteTotal(int value) {
         this.importeTotal = value;
     }
 
     /**
      * Obtiene el valor de la propiedad nroTicket.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
      */
-    public BigInteger getNroTicket() {
+    public int getNroTicket() {
         return nroTicket;
     }
 
     /**
      * Define el valor de la propiedad nroTicket.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
      */
-    public void setNroTicket(BigInteger value) {
+    public void setNroTicket(int value) {
         this.nroTicket = value;
     }
 

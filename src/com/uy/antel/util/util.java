@@ -1,6 +1,5 @@
 package com.uy.antel.util;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -10,6 +9,8 @@ import java.util.Properties;
 
 public class util {
 
+	private static String formatoEsperadoFecha = "yyyy-MM-dd_HH:mm";
+	
 	public static int getPuertoTerminal() {
 		Properties prop = new Properties();
 		try {
@@ -33,13 +34,31 @@ public class util {
 		return prop.get("idAgencia").toString();
 	}
 
-	public static Date stringToDate(String fechaStr) throws ParseException {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
-		return format.parse(fechaStr);
+	public static Date stringToDate(String fechaStr) {
+		SimpleDateFormat format = new SimpleDateFormat(formatoEsperadoFecha);
+		Date resultDate = new Date();		
+		format.setLenient(false);
+	    try {
+	    	resultDate = format.parse(fechaStr.trim());
+	    } catch (ParseException pe) {
+	    	 pe.printStackTrace();
+	    }
+	    return resultDate;
 	}
 
 	public static String dateToString(Date fecha) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
+		SimpleDateFormat format = new SimpleDateFormat(formatoEsperadoFecha);
 		return format.format(fecha);
 	}
+	
+	public static boolean esValidaFecha(String fecha) {
+	    SimpleDateFormat dateFormat = new SimpleDateFormat(formatoEsperadoFecha);
+	    dateFormat.setLenient(false);
+	    try {
+	      dateFormat.parse(fecha.trim());
+	    } catch (ParseException pe) {
+	      return false;
+	    }
+	    return true;
+   }
 }

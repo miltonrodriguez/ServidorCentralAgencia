@@ -1,7 +1,6 @@
 package com.uy.antel.controlador;
 
 import java.rmi.RemoteException;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.xml.rpc.ServiceException;
@@ -21,14 +20,15 @@ public class ctrlWS {
 		}
 		return instance;
 	}
-	
+
 	public DataTicket altaTicket(String matricual, Date fechaIniE, int cantMinutos, Date fechaVenta, String agencia) {
 		WsTicketServiceLocator wsIMM = new WsTicketServiceLocator();
-		try {//TODO manejar las excepciones y agregar el id de la agenciad esde una property
-			DataTicket respuesta = wsIMM.getwsTicketPort().altaTicket(matricual,util.dateToString(fechaIniE), cantMinutos,util.dateToString(fechaVenta),agencia);
-						
+		try {
+			DataTicket respuesta = wsIMM.getwsTicketPort().altaTicket(matricual, util.dateToString(fechaIniE),
+					cantMinutos, util.dateToString(fechaVenta), agencia);
+
 			return respuesta;
-			
+
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,6 +36,10 @@ public class ctrlWS {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+
+		DataTicket dataError = new DataTicket();
+		dataError.setError(201);
+		dataError.setMensaje("Error del sistema.");
+		return dataError;
 	}
 }

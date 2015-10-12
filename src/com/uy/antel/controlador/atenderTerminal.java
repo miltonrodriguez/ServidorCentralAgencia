@@ -1,21 +1,19 @@
 package com.uy.antel.controlador;
 
-import java.net.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.Socket;
 
-import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
-import org.xml.sax.SAXException;
-
-import com.uy.antel.xml.AltaTicket.*;
-import com.uy.antel.xml.DataTicket.*;
-
-import java.io.*;
+import com.uy.antel.xml.AltaTicket.XmlAltaTicket;
+import com.uy.antel.xml.DataTicket.XmlDataTicket;
 
 public class atenderTerminal implements Runnable {
 
