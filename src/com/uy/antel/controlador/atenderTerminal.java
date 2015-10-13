@@ -12,8 +12,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import com.uy.antel.util.util;
 import com.uy.antel.xml.AltaTicket.XmlAltaTicket;
 import com.uy.antel.xml.DataTicket.XmlDataTicket;
+import com.uy.antel.xml.login.XmlLogin;
+import com.uy.antel.xml.loginResp.XmlLoginResp;
 
 public class atenderTerminal implements Runnable {
 
@@ -25,45 +28,70 @@ public class atenderTerminal implements Runnable {
 	}
 
 	public void run() {
-//		InputStream in = null;
-//		OutputStream out = null;
 		DataInputStream is = null;
-        DataOutputStream os = null;
+		DataOutputStream os = null;
 		try {
-//			in = client.getInputStream();
-//			out = client.getOutputStream();
 			is = new DataInputStream(client.getInputStream());
-            os = new DataOutputStream(client.getOutputStream());
+			os = new DataOutputStream(client.getOutputStream());
 		} catch (IOException e) {
 			System.out.println("in or out failed");
 			System.exit(-1);
 		}
 		try {
-			while (true) {
-
+			boolean login = false;
+			int cont = 0;
+			while (!login && cont < util.getCantIntentosLogin()) {
 				JAXBContext jaxbContext;
-				jaxbContext = JAXBContext.newInstance("com.uy.antel.xml.AltaTicket");
+				jaxbContext = JAXBContext.newInstance("com.uy.antel.xml.login");
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 				// Hago la conversion de XML -> objeto AltaTicket.
-				XmlAltaTicket inAltaTicket = (XmlAltaTicket) jaxbUnmarshaller.unmarshal(new StringReader(is.readUTF()));
-
-				System.out.println("unmarshall");
-				System.out.println(inAltaTicket.getMatricula());
-				System.out.println(inAltaTicket.getCantidadMinutos());
-				System.out.println(inAltaTicket.getFechaHoraInicioEst());
-
+				XmlLogin inLogin = (XmlLogin) jaxbUnmarshaller.unmarshal(new StringReader(is.readUTF()));
 				ctrlCentral central = ctrlCentral.getInstance();
-				XmlDataTicket outDataTicket = central.altaTicket(inAltaTicket);
-
-				JAXBContext context = JAXBContext.newInstance("com.uy.antel.xml.DataTicket");
-
+				XmlLoginResp outLogin = central.login(inLogin);
+				if (outLogin.getError() == 0) {
+					login = true;
+				}
+				JAXBContext context = JAXBContext.newInstance("com.uy.antel.xml.loginResp");
 				Marshaller marshaller = context.createMarshaller();
-
 				StringWriter writer = new StringWriter();
-				marshaller.marshal(outDataTicket, writer);
+				marshaller.marshal(outLogin, writer);
 				os.writeUTF(writer.toString());
+				cont++;
+			}
+			// Si se logro hacer el login, continua la ejecucion de este socket
+			if (login) {
+
+				while (true) {
+
+					JAXBContext jaxbContext;
+					jaxbContext = JAXBContext.newInstance("com.uy.antel.xml.AltaTicket");
+					Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+					// Hago la conversion de XML -> objeto AltaTicket.
+					XmlAltaTicket inAltaTicket = (XmlAltaTicket) jaxbUnmarshaller
+							.unmarshal(new StringReader(is.readUTF()));
+
+					System.out.println("unmarshall");
+					System.out.println(inAltaTicket.getMatricula());
+					System.out.println(inAltaTicket.getCantidadMinutos());
+					System.out.println(inAltaTicket.getFechaHoraInicioEst());
+
+					ctrlCentral central = ctrlCentral.getInstance();
+					XmlDataTicket outDataTicket = central.altaTicket(inAltaTicket);
+
+					JAXBContext context = JAXBContext.newInstance("com.uy.antel.xml.DataTicket");
+
+					Marshaller marshaller = context.createMarshaller();
+
+					StringWriter writer = new StringWriter();
+					marshaller.marshal(outDataTicket, writer);
+					os.writeUTF(writer.toString());
 
 				}
+			} else {
+				finalize();
+				return;
+
+			}
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			System.out.println("JAXException - " + this.getClass());

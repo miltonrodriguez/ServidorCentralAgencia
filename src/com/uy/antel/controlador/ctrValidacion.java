@@ -25,6 +25,36 @@ public class ctrValidacion implements ICtrValidacion {
 		return instance;
 	}
 
+
+
+	@Override
+	public Pair<Integer,String> validarEntradaAltaTicket(String matricula, String fechaIniE, int cantMinutos, Date fechaVenta) {
+		Pair<Integer,String> error;
+		if (!validarFormatoFecha(fechaIniE))
+			error = new ImmutablePair<Integer,String>(105,"La fecha ingresada no es correcta.");
+		else if (!validarFechainiEFuturo(util.stringToDate(fechaIniE), fechaVenta))
+			error = new ImmutablePair<Integer, String> (101,"La fecha de la solicitud de estacionamiento debe ser en el futuro.");
+		else if (!validarFechainiEHs(util.stringToDate(fechaIniE)))
+			error = new ImmutablePair<Integer, String> (102,"El horario de estacionamiento tarifado de 10 – 18 hs.");
+		else if (!validarFechainiEMasMinHs(util.stringToDate(fechaIniE), cantMinutos))
+			error = new ImmutablePair<Integer, String> (103,"La cantidad de minutos seleccionada excede la hora de finalización del horario de estacionamiento tarifado (18hs).");
+		else if (!validarMatricula(matricula))
+			error = new ImmutablePair<Integer, String> (104,"La matricula no es valida.");
+		else if (!validarCantidadMinutos(cantMinutos))
+			error = new ImmutablePair<Integer, String> (106,"La cantidad de minutos seleccionada debe ser multiplo de 30.");
+		else
+			error = new ImmutablePair<Integer, String>(0,"");
+		return error;
+	}
+
+	@Override
+	public Pair<Integer, String> validarEntradaLogin(String usuario, String clave, int nroTerminal) {
+		// TODO colocar validaciones al login
+		Pair<Integer,String> error;
+		error = new ImmutablePair<Integer, String>(0,"");
+		return error;
+	}
+
 	private boolean validarMatricula(String matricula) {
 		boolean ok = (matricula.length() == 7);
 		if (ok) {
@@ -57,25 +87,5 @@ public class ctrValidacion implements ICtrValidacion {
 		// La fecha debe tener el formato "yyyy-MM-dd_HH:mm"
 		return util.esValidaFecha(fecha);
 	}
-
-	@Override
-	public Pair<Integer,String> validarEntrada(String matricula, String fechaIniE, int cantMinutos, Date fechaVenta) {
-		Pair<Integer,String> error;
-		if (!validarFormatoFecha(fechaIniE))
-			error = new ImmutablePair<Integer,String>(105,"La fecha ingresada no es correcta.");
-		else if (!validarFechainiEFuturo(util.stringToDate(fechaIniE), fechaVenta))
-			error = new ImmutablePair<Integer, String> (101,"La fecha de la solicitud de estacionamiento debe ser en el futuro.");
-		else if (!validarFechainiEHs(util.stringToDate(fechaIniE)))
-			error = new ImmutablePair<Integer, String> (102,"El horario de estacionamiento tarifado de 10 – 18 hs.");
-		else if (!validarFechainiEMasMinHs(util.stringToDate(fechaIniE), cantMinutos))
-			error = new ImmutablePair<Integer, String> (103,"La cantidad de minutos seleccionada excede la hora de finalización del horario de estacionamiento tarifado (18hs).");
-		else if (!validarMatricula(matricula))
-			error = new ImmutablePair<Integer, String> (104,"La matricula no es valida.");
-		else if (!validarCantidadMinutos(cantMinutos))
-			error = new ImmutablePair<Integer, String> (106,"La cantidad de minutos seleccionada debe ser multiplo de 30.");
-		else
-			error = new ImmutablePair<Integer, String>(0,"");
-		return error;
-	}
-
+	
 }

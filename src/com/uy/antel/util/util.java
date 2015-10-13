@@ -9,29 +9,18 @@ import java.util.Properties;
 
 public class util {
 
-	private static String formatoEsperadoFecha = "yyyy-MM-dd_HH:mm";
+	private static String formatoEsperadoFecha = System.getProperty("com.uy.antel.formatoEsperadoFecha");
 	
 	public static int getPuertoTerminal() {
-		Properties prop = new Properties();
-		try {
-			InputStream inputStream = util.class.getClassLoader().getResourceAsStream("/propiedades.properties");
-			prop.load(inputStream);
-		} catch (IOException e) {
-			System.out.println("No se pudo abrir el archivo.properties 1");
-
-		}
-		return Integer.parseInt(prop.get("puertoTerminales").toString());
+		return Integer.parseInt(System.getProperty("com.uy.antel.puertoTerminal"));
 	}
 
 	public static String getIdAgencia() {
-		Properties prop = new Properties();
-		try {
-			InputStream inputStream = util.class.getClassLoader().getResourceAsStream("/propiedades.properties");
-			prop.load(inputStream);
-		} catch (IOException e) {
-			System.out.println("No se pudo abrir el archivo.properties 2");
-		}
-		return prop.get("idAgencia").toString();
+		return System.getProperty("com.uy.antel.idAgencia");
+	}
+	
+	public static int getCantIntentosLogin() {
+		return Integer.parseInt(System.getProperty("com.uy.antel.cantIntentosLogin"));
 	}
 
 	public static Date stringToDate(String fechaStr) {
