@@ -5,11 +5,13 @@ import java.util.Date;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.uy.antel.util.util;
-import com.uy.antel.xml.AltaTicket.XmlAltaTicket;
-import com.uy.antel.xml.DataTicket.ObjectFactory;
-import com.uy.antel.xml.DataTicket.XmlDataTicket;
 import com.uy.antel.xml.login.XmlLogin;
 import com.uy.antel.xml.loginResp.XmlLoginResp;
+import com.uy.antel.xml.respTicket.ObjectFactory;
+import com.uy.antel.xml.respTicket.OperacionT;
+import com.uy.antel.xml.respTicket.XmlRes;
+import com.uy.antel.xml.respTicket.XmlRes.XmlRespAltaTicket;
+import com.uy.antel.xml.ticket.XmlTicket.XmlAltaTicket;
 
 import antel.com.uy.webservices.DataTicket;
 
@@ -24,9 +26,10 @@ public class ctrlCentral {
 		return instance;
 	}
 
-	public XmlDataTicket altaTicket(XmlAltaTicket xmlAltaT) {
+	public XmlRes altaTicket(XmlAltaTicket xmlAltaT) {
 		ObjectFactory factory = new ObjectFactory();
-		XmlDataTicket dataTicketResp = factory.createXmlDataTicket();
+		XmlRespAltaTicket respAltaTicket = factory.createXmlResXmlRespAltaTicket();
+		XmlRes respTicket = factory.createXmlRes();
 		try {
 			ctrlWS ws = ctrlWS.getInstance();
 			Date fechaVenta = new Date();
@@ -43,10 +46,10 @@ public class ctrlCentral {
 				DataTicket respuesta = ws.altaTicket(matricula, fechaIniE, cantMinutos, fechaVenta,
 						util.getIdAgencia());
 				System.out.println("ctrCentral - altaticket - paso la invocacion al alta ticket en el ws");
-				dataTicketResp.setError(respuesta.getError());
-				dataTicketResp.setMensaje(respuesta.getMensaje());
-				dataTicketResp.setImporteTotal(respuesta.getImporteTotal());
-				dataTicketResp.setNroTicket(respuesta.getNroTicket());
+				respAltaTicket.setError(respuesta.getError());
+				respAltaTicket.setMensaje(respuesta.getMensaje());
+				respAltaTicket.setImporteTotal(respuesta.getImporteTotal());
+				respAltaTicket.setNroTicket(respuesta.getNroTicket());
 				if (respuesta.getError() == 0) {
 					// Doy de alta el ticket en la BD
 					System.out.println("ctrCentral - altaticket - se va a persistir en la BD de agencia el alta ticket");
@@ -60,18 +63,20 @@ public class ctrlCentral {
 				}
 			} else {
 				// Error de entrada
-				dataTicketResp.setError(resp.getKey());
-				dataTicketResp.setMensaje(resp.getValue());
+				respAltaTicket.setError(resp.getKey());
+				respAltaTicket.setMensaje(resp.getValue());
 			}
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			dataTicketResp.setError(201);
-			dataTicketResp.setMensaje("Error del sistema.");
+			respAltaTicket.setError(201);
+			respAltaTicket.setMensaje("Error del sistema.");
 		}
-		System.out.println("ctrCentral - altaticket - se re torna la respuesta con codigo: "+ dataTicketResp.getError());
-		return dataTicketResp;
+		System.out.println("ctrCentral - altaticket - se re torna la respuesta con codigo: "+ respAltaTicket.getError());
+		respTicket.setOperacion(OperacionT.ALTA);
+		respTicket.setXmlRespAltaTicket(respAltaTicket);
+		return respTicket;
 	}
 	
 	public XmlLoginResp login(XmlLogin login) {
