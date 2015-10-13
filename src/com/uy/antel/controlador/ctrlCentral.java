@@ -50,8 +50,10 @@ public class ctrlCentral {
 					System.out.println("ctrCentral - altaticket - se va a persistir en la BD de agencia el alta ticket");
 					ctrlDAO dao = ctrlDAO.getInstance();
 					dao.altaAuto(matricula);
+					System.out.println("ctrCentral - altaticket - se persistio el auto en la BD de agencia el alta ticket");
 					dao.altaTicket(respuesta.getNroTicket(), fechaVenta, fechaIniE, cantMinutos,
 							respuesta.getImporteTotal(), matricula, xmlAltaT.getNroTerminal());
+					System.out.println("ctrCentral - altaticket - se persistio el ticketen la BD de agencia el alta ticket");
 
 				}
 			} else {

@@ -61,10 +61,13 @@ public class ctrlDAO {
 			}
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
+			throw new Exception("Error del sistema.");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new Exception("Error del sistema.");
 		}
 
 	}
@@ -87,7 +90,7 @@ public class ctrlDAO {
 				conn.close();
 			} else {
 				conn.setAutoCommit(false);
-				PreparedStatement ps_secuencia = conn.prepareStatement("select id from secuencias where nombre='auto'");
+				PreparedStatement ps_secuencia = conn.prepareStatement("select secuencia from secuencias where nombre='auto'");
 				ResultSet rs_secuencia = ps_secuencia.executeQuery();
 				int secuencia;
 				if (rs_secuencia.next()) {

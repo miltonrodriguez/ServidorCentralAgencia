@@ -21,10 +21,10 @@ public class ctrlWS {
 		return instance;
 	}
 
-	public DataTicket altaTicket(String matricual, Date fechaIniE, int cantMinutos, Date fechaVenta, String agencia) {
+	public DataTicket altaTicket(String matricula, Date fechaIniE, int cantMinutos, Date fechaVenta, String agencia) {
 		WsTicketServiceLocator wsIMM = new WsTicketServiceLocator();
 		try {
-			DataTicket respuesta = wsIMM.getwsTicketPort().altaTicket(matricual, util.dateToString(fechaIniE),
+			DataTicket respuesta = wsIMM.getwsTicketPort().altaTicket(matricula,util.dateToString(fechaIniE),
 					cantMinutos, util.dateToString(fechaVenta), agencia);
 
 			return respuesta;
