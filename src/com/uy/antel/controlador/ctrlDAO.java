@@ -61,7 +61,7 @@ public class ctrlDAO {
 			}
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
-			
+
 			e.printStackTrace();
 			throw new Exception("Error del sistema.");
 		} catch (SQLException e) {
@@ -90,7 +90,8 @@ public class ctrlDAO {
 				conn.close();
 			} else {
 				conn.setAutoCommit(false);
-				PreparedStatement ps_secuencia = conn.prepareStatement("select secuencia from secuencias where nombre='auto'");
+				PreparedStatement ps_secuencia = conn
+						.prepareStatement("select secuencia from secuencias where nombre='auto'");
 				ResultSet rs_secuencia = ps_secuencia.executeQuery();
 				int secuencia;
 				if (rs_secuencia.next()) {
@@ -103,7 +104,8 @@ public class ctrlDAO {
 						.prepareStatement("update secuencias set secuencia=? where nombre='auto'");
 				ps_update_secuencia.setInt(1, secuencia);
 				ps_update_secuencia.executeUpdate();
-				PreparedStatement ps_insert_auto = conn.prepareStatement("insert into auto (matricula, idAuto) values (?,?)");
+				PreparedStatement ps_insert_auto = conn
+						.prepareStatement("insert into auto (matricula, idAuto) values (?,?)");
 				ps_insert_auto.setString(1, matricula);
 				ps_insert_auto.setInt(2, secuencia);
 				ps_insert_auto.executeUpdate();
@@ -129,6 +131,7 @@ public class ctrlDAO {
 
 	}
 
+	// si nroterminal = -1 el login es de la web
 	public boolean login(String usuario, String password, int nroTerminal) throws Exception {
 
 		InitialContext initContext;
@@ -146,8 +149,8 @@ public class ctrlDAO {
 				// Existe el usuario
 
 				PreparedStatement ps_rol_terminal = conn.prepareStatement(
-						"select t.nroTerminal from (((rol_usuario ru join rol ro on ru.fk_rol = ro.rol) join rol_terminal rt on rt.fk_rol = ro.rol) join on terminal t on rt.fk_terminal = t.nroTerminal) where ru.fk_usuario = ? and t.nroTerminal = ?");
-				ps_rol_terminal.setString(1, usuario);
+						"select t.nroTerminal from (((rol_usuario ru join rol ro on ru.fk_rol = ro.rol) join rol_terminal rt on rt.fk_rol = ro.rol) join terminal t on rt.fk_terminal = t.nroTerminal) where ru.fk_usuario = ? and t.nroTerminal = ?");
+				ps_rol_terminal.setInt(1, rs_usuario.getInt("id"));
 				ps_rol_terminal.setInt(2, nroTerminal);
 				ResultSet rs_rol_terminal = ps_rol_terminal.executeQuery();
 
@@ -160,15 +163,18 @@ public class ctrlDAO {
 					conn.close();
 					return true;
 				}
-				//el usuario no se puede loguear en la terminal
+				// el usuario no se puede loguear en la terminal
 				rs_rol_terminal.close();
 				ps_rol_terminal.close();
 				rs_usuario.close();
 				ps_usuario.close();
 				conn.close();
-				throw new Exception("El usuario no se puede loguear en la terminal");
+				if (nroTerminal != -1)
+					throw new Exception("El usuario no se puede loguear en la terminal");
+				else
+					throw new Exception("El usuario no se puede loguear en la Web");
 			}
-			//El usuario no existe
+			// El usuario no existe
 			rs_usuario.close();
 			ps_usuario.close();
 			conn.close();
@@ -184,4 +190,5 @@ public class ctrlDAO {
 		}
 
 	}
+
 }

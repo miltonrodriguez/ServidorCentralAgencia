@@ -12,6 +12,18 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
+
+	<!-- Login filter -->
+	<filter>
+		<filter-name>LoginFilter</filter-name>
+		<filter-class>com.uy.antel.util.LoginFilter</filter-class>
+	</filter>
+	<!-- Set the login filter to secure all the pages -->
+	<filter-mapping>
+		<filter-name>LoginFilter</filter-name>
+		<url-pattern>/Admin/*</url-pattern>
+	</filter-mapping>
+
 	<servlet>
 		<servlet-name>lanzador</servlet-name>
 		<servlet-class>com.uy.antel.servlets.lanzador</servlet-class>
