@@ -64,9 +64,9 @@ public class ServletController extends HttpServlet {
 	            session.setAttribute("UsuarioAgencia",usuario );
 	            //setting session to expiry in 30 mins
 	            session.setMaxInactiveInterval(30*60);
-	            Cookie userCookie = new Cookie("user", usuario);
-	            userCookie.setMaxAge(30*60);
-	            response.addCookie(userCookie);
+//	            Cookie userCookie = new Cookie("user", usuario);
+//	            userCookie.setMaxAge(30*60);
+//	            response.addCookie(userCookie);
 	            request.setAttribute("respuesta", "loginOK");
 				rd.forward(request, response);
 			}

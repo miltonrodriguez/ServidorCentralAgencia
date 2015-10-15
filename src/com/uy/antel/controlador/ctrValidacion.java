@@ -71,12 +71,14 @@ public class ctrValidacion implements ICtrValidacion {
 
 	@SuppressWarnings("deprecation")
 	private boolean validarFechainiEHs(Date fechaIniE) {
-		return (10 < fechaIniE.getHours() && fechaIniE.getHours() <= 18);
+		return (10 <= fechaIniE.getHours() && fechaIniE.getHours() < 18);
 	}
 
 	@SuppressWarnings("deprecation")
 	private boolean validarFechainiEMasMinHs(Date fechaIniE, int cantMIn) {
-		return DateUtils.addHours(fechaIniE, cantMIn).getHours() <= 18;
+		Date masMin = DateUtils.addMinutes(fechaIniE, cantMIn);
+		
+		return ((masMin.getHours() < 18)||((masMin.getHours() == 18)&&((masMin.getMinutes() == 0))));
 	}
 
 	private boolean validarCantidadMinutos(int cantMinutos) {

@@ -27,7 +27,8 @@ public class LoginFilter implements Filter {
 	        session = ((HttpServletRequest)req).getSession();
 	        
 	        if ((session.getAttribute("UsuarioAgencia") != null) || (((HttpServletRequest) req).getRequestURI().contains("/Admin/Login.jsp")) ){
-	            chain.doFilter(req, res);
+	            System.out.println("pasa por el if");
+	        	chain.doFilter(req, res);
 	        } else {
 	        	 String contextPath = ((HttpServletRequest)req).getContextPath();
 	             ((HttpServletResponse)res).sendRedirect(contextPath + "/Admin/Login.jsp");
