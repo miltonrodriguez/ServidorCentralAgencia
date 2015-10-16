@@ -17,7 +17,6 @@ import com.uy.antel.xml.login.XmlLogin;
 import com.uy.antel.xml.loginResp.XmlLoginResp;
 import com.uy.antel.xml.respTicket.OperacionT;
 import com.uy.antel.xml.respTicket.XmlRes;
-import com.uy.antel.xml.respTicket.XmlRes.XmlRespAltaTicket;
 import com.uy.antel.xml.ticket.XmlTicket;
 
 public class atenderTerminal implements Runnable {
@@ -75,7 +74,7 @@ public class atenderTerminal implements Runnable {
 					JAXBContext jaxbContext;
 					jaxbContext = JAXBContext.newInstance("com.uy.antel.xml.ticket");
 					Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-					// Hago la conversion de XML -> objeto AltaTicket.
+					// Hago la conversion de XML -> objeto xmlTickt.
 					System.out.println("unmarshall 1");
 					XmlTicket inTicket = (XmlTicket) jaxbUnmarshaller.unmarshal(new StringReader(is.readUTF()));
 					ctrlCentral central = ctrlCentral.getInstance();

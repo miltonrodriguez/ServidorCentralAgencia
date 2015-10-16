@@ -9,7 +9,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.uy.antel.util.util;
 
-
 public class ctrValidacion implements ICtrValidacion {
 
 	private static ctrValidacion instance;
@@ -25,50 +24,52 @@ public class ctrValidacion implements ICtrValidacion {
 		return instance;
 	}
 
-
-
 	@Override
-	public Pair<Integer,String> validarEntradaAltaTicket(String matricula, String fechaIniE, int cantMinutos, Date fechaVenta) {
-		Pair<Integer,String> error;
+	public Pair<Integer, String> validarEntradaAltaTicket(String matricula, String fechaIniE, int cantMinutos,
+			Date fechaVenta) {
+		Pair<Integer, String> error;
 		if (!validarFormatoFecha(fechaIniE))
-			error = new ImmutablePair<Integer,String>(105,"La fecha ingresada no es correcta.");
+			error = new ImmutablePair<Integer, String>(105, "La fecha ingresada no es correcta.");
 		else if (!validarFechainiEFuturo(util.stringToDate(fechaIniE), fechaVenta))
-			error = new ImmutablePair<Integer, String> (101,"La fecha de la solicitud de estacionamiento debe ser en el futuro.");
+			error = new ImmutablePair<Integer, String>(101,
+					"La fecha de la solicitud de estacionamiento debe ser en el futuro.");
 		else if (!validarFechainiEHs(util.stringToDate(fechaIniE)))
-			error = new ImmutablePair<Integer, String> (102,"El horario de estacionamiento tarifado de 10 – 18 hs.");
+			error = new ImmutablePair<Integer, String>(102, "El horario de estacionamiento tarifado de 10 – 18 hs.");
 		else if (!validarFechainiEMasMinHs(util.stringToDate(fechaIniE), cantMinutos))
-			error = new ImmutablePair<Integer, String> (103,"La cantidad de minutos seleccionada excede la hora de finalización del horario de estacionamiento tarifado (18hs).");
+			error = new ImmutablePair<Integer, String>(103,
+					"La cantidad de minutos seleccionada excede la hora de finalización del horario de estacionamiento tarifado (18hs).");
 		else if (!validarMatricula(matricula))
-			error = new ImmutablePair<Integer, String> (104,"La matricula no es valida.");
+			error = new ImmutablePair<Integer, String>(104, "La matricula no es valida.");
 		else if (!validarCantidadMinutos(cantMinutos))
-			error = new ImmutablePair<Integer, String> (106,"La cantidad de minutos seleccionada debe ser multiplo de 30.");
+			error = new ImmutablePair<Integer, String>(106,
+					"La cantidad de minutos seleccionada debe ser multiplo de 30.");
 		else
-			error = new ImmutablePair<Integer, String>(0,"");
+			error = new ImmutablePair<Integer, String>(0, "");
 		return error;
 	}
 
-	
 	@Override
 	public Pair<Integer, String> validarEntradaCancelacionTicket(int nroTicket) {
-		Pair<Integer,String> error;
-		if (nroTicket<=0 || !validarNroTicketAgencia(nroTicket))
-			error = new ImmutablePair<Integer,String>(101,"El numero de ticket ingresado no es valido");
-		else
-			error = new ImmutablePair<Integer, String>(0,"");
+		Pair<Integer, String> error;
+		if (nroTicket <= 0)
+			error = new ImmutablePair<Integer, String>(101, "El numero de ticket ingresado no es valido");
+		else {
+			ctrlDAO dao = ctrlDAO.getInstance();
+			Pair<Integer, String> errVal = dao.validarNroTicketAgencia(nroTicket);
+			if (errVal.getKey() != 0) {
+				error = errVal;
+			} else
+				error = new ImmutablePair<Integer, String>(0, "");
+
+		}
 		return error;
-	}
-	
-	
-	private boolean validarNroTicketAgencia(int nroTicket) {
-		ctrlDAO dao = ctrlDAO.getInstance();
-		dao.validarNroTicketAgenciaVendido(nroTicket);
 	}
 
 	@Override
 	public Pair<Integer, String> validarEntradaLogin(String usuario, String clave, int nroTerminal) {
 		// TODO colocar validaciones al login
-		Pair<Integer,String> error;
-		error = new ImmutablePair<Integer, String>(0,"");
+		Pair<Integer, String> error;
+		error = new ImmutablePair<Integer, String>(0, "");
 		return error;
 	}
 
@@ -94,8 +95,8 @@ public class ctrValidacion implements ICtrValidacion {
 	@SuppressWarnings("deprecation")
 	private boolean validarFechainiEMasMinHs(Date fechaIniE, int cantMIn) {
 		Date masMin = DateUtils.addMinutes(fechaIniE, cantMIn);
-		
-		return ((masMin.getHours() < 18)||((masMin.getHours() == 18)&&((masMin.getMinutes() == 0))));
+
+		return ((masMin.getHours() < 18) || ((masMin.getHours() == 18) && ((masMin.getMinutes() == 0))));
 	}
 
 	private boolean validarCantidadMinutos(int cantMinutos) {
@@ -107,6 +108,4 @@ public class ctrValidacion implements ICtrValidacion {
 		return util.esValidaFecha(fecha);
 	}
 
-	
-	
 }
