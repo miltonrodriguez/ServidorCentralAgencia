@@ -9,4 +9,6 @@ public interface ICtrValidacion {
 			Date fechaVenta);
 
 	public Pair<Integer, String> validarEntradaLogin(String usuario, String clave, int nroTerminal);
+
+	public Pair<Integer, String> validarEntradaCancelacionTicket(int nroTicket);
 }

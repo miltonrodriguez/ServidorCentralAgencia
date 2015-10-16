@@ -47,6 +47,23 @@ public class ctrValidacion implements ICtrValidacion {
 		return error;
 	}
 
+	
+	@Override
+	public Pair<Integer, String> validarEntradaCancelacionTicket(int nroTicket) {
+		Pair<Integer,String> error;
+		if (nroTicket<=0 || !validarNroTicketAgencia(nroTicket))
+			error = new ImmutablePair<Integer,String>(101,"El numero de ticket ingresado no es valido");
+		else
+			error = new ImmutablePair<Integer, String>(0,"");
+		return error;
+	}
+	
+	
+	private boolean validarNroTicketAgencia(int nroTicket) {
+		ctrlDAO dao = ctrlDAO.getInstance();
+		dao.validarNroTicketAgenciaVendido(nroTicket);
+	}
+
 	@Override
 	public Pair<Integer, String> validarEntradaLogin(String usuario, String clave, int nroTerminal) {
 		// TODO colocar validaciones al login
@@ -89,5 +106,7 @@ public class ctrValidacion implements ICtrValidacion {
 		// La fecha debe tener el formato "yyyy-MM-dd_HH:mm"
 		return util.esValidaFecha(fecha);
 	}
+
+	
 	
 }

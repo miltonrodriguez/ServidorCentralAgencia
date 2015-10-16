@@ -32,6 +32,7 @@ public class atenderTerminal implements Runnable {
 	public void run() {
 		DataInputStream is = null;
 		DataOutputStream os = null;
+		int nroTerminal = 0;
 		try {
 			is = new DataInputStream(client.getInputStream());
 			os = new DataOutputStream(client.getOutputStream());
@@ -55,6 +56,7 @@ public class atenderTerminal implements Runnable {
 				XmlLoginResp outLogin = central.login(inLogin);
 				if (outLogin.getError() == 0) {
 					login = true;
+					nroTerminal = inLogin.getNroTerminal();
 					System.out.println("marshal login OK");
 				}
 				JAXBContext context = JAXBContext.newInstance("com.uy.antel.xml.loginResp");
@@ -76,26 +78,22 @@ public class atenderTerminal implements Runnable {
 					// Hago la conversion de XML -> objeto AltaTicket.
 					System.out.println("unmarshall 1");
 					XmlTicket inTicket = (XmlTicket) jaxbUnmarshaller.unmarshal(new StringReader(is.readUTF()));
+					ctrlCentral central = ctrlCentral.getInstance();
+					XmlRes outRespTicket;
 					if (inTicket.getOperacion().toString() == OperacionT.ALTA.toString()) {
 						// ALTA
-						System.out.println("unmarshall 1.1 " + inTicket.getOperacion().toString());
-						System.out.println("unmarshall");
-						System.out.println(inTicket.getXmlAltaTicket().getMatricula());
-						System.out.println(inTicket.getXmlAltaTicket().getCantidadMinutos());
-						System.out.println(inTicket.getXmlAltaTicket().getFechaHoraInicioEst());
-
-						ctrlCentral central = ctrlCentral.getInstance();
-						XmlRes outRespTicket = central.altaTicket(inTicket.getXmlAltaTicket());
-
-						JAXBContext context = JAXBContext.newInstance("com.uy.antel.xml.respTicket");
-
-						Marshaller marshaller = context.createMarshaller();
-
-						StringWriter writer = new StringWriter();
-						marshaller.marshal(outRespTicket, writer);
-						os.writeUTF(writer.toString());
-
+						outRespTicket = central.altaTicket(inTicket.getXmlAltaTicket(),nroTerminal);
+					}else if (inTicket.getOperacion().toString() == OperacionT.CANCELACION.toString()) {
+						// CANCELACION
+						outRespTicket = central.cancelacionTicket(inTicket.getXmlCancelacionTicket(),nroTerminal);
+						
 					}
+					
+					JAXBContext context = JAXBContext.newInstance("com.uy.antel.xml.respTicket");
+					Marshaller marshaller = context.createMarshaller();
+					StringWriter writer = new StringWriter();
+					marshaller.marshal(outRespTicket, writer);
+					os.writeUTF(writer.toString());
 				}
 			} else {
 				finalize();
