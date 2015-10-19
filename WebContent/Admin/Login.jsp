@@ -21,8 +21,7 @@ if (resp!= null && resp.length() != 0)
 }
 %>
 	<h1>Login</h1>
-	<form action="Controlador">
-		<input type="hidden" name="operacion" value="login">
+	<form action="Login">
 		<label for="usuario">Usuario</label> <input type="text" name="usuario"></input>
 		<br> 
 		<label for="password">Password</label> <input type="password" name="password"></input>

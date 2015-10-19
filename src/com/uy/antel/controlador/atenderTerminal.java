@@ -87,6 +87,11 @@ public class atenderTerminal implements Runnable {
 						outRespTicket = central.cancelacionTicket(inTicket.getXmlCancelacionTicket(),nroTerminal);
 						
 					}
+					else {
+						//Exit
+						finalize();
+						return;
+					}
 					
 					JAXBContext context = JAXBContext.newInstance("com.uy.antel.xml.respTicket");
 					Marshaller marshaller = context.createMarshaller();

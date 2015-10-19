@@ -19,8 +19,8 @@ import com.uy.antel.controlador.ctrlDAO;
 /**
  * Servlet implementation class ServletController
  */
-@WebServlet("/Admin/Controlador")
-public class ServletController extends HttpServlet {
+@WebServlet("/Admin/Login")
+public class ServletLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -35,7 +35,7 @@ public class ServletController extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ServletController() {
+	public ServletLogin() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -46,34 +46,31 @@ public class ServletController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-	
-		if ("login".equals(request.getParameter("operacion"))) {
-			RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
-			String usuario = request.getParameter("usuario");
-			String password = request.getParameter("password");
-			ctrlDAO dao = ctrlDAO.getInstance();
-			boolean login = false;
-			try {
-				login = dao.login(usuario, password, -1);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
-			if(login){
-				HttpSession session = request.getSession();
-	            session.setAttribute("UsuarioAgencia",usuario );
-	            //setting session to expiry in 30 mins
-	            session.setMaxInactiveInterval(30*60);
-//	            Cookie userCookie = new Cookie("user", usuario);
-//	            userCookie.setMaxAge(30*60);
-//	            response.addCookie(userCookie);
-	            request.setAttribute("respuesta", "loginOK");
-				rd.forward(request, response);
-			}
-			else{
-				request.setAttribute("respuesta", "Usuario o contraseña incorrecta");
-				rd.forward(request, response);
-			}
+
+		RequestDispatcher rd = request.getRequestDispatcher("/Admin/Login.jsp");
+		String usuario = request.getParameter("usuario");
+		String password = request.getParameter("password");
+		ctrlDAO dao = ctrlDAO.getInstance();
+		boolean login = false;
+		try {
+			login = dao.login(usuario, password, -1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (login) {
+			HttpSession session = request.getSession();
+			session.setAttribute("UsuarioAgencia", usuario);
+			// setting session to expiry in 30 mins
+			session.setMaxInactiveInterval(30 * 60);
+			// Cookie userCookie = new Cookie("user", usuario);
+			// userCookie.setMaxAge(30*60);
+			// response.addCookie(userCookie);
+			request.setAttribute("respuesta", "loginOK");
+			rd.include(request, response);
+		} else {
+			request.setAttribute("respuesta", "Usuario o contraseña incorrecta");
+			rd.include(request, response);
 		}
 
 	}
