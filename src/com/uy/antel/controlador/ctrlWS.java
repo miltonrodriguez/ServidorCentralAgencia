@@ -7,6 +7,7 @@ import javax.xml.rpc.ServiceException;
 
 import com.uy.antel.util.util;
 
+import antel.com.uy.webservices.DataAnulacion;
 import antel.com.uy.webservices.DataTicket;
 import antel.com.uy.webservices.WsTicketServiceLocator;
 
@@ -41,5 +42,26 @@ public class ctrlWS {
 		dataError.setError(201);
 		dataError.setMensaje("Error del sistema.");
 		return dataError;
+	}
+	
+	public DataAnulacion cancelacionTicket(int nroTicket, String idAgencia) {
+		WsTicketServiceLocator wsIMM = new WsTicketServiceLocator();
+		try {
+			DataAnulacion respuesta = wsIMM.getwsTicketPort().anulacionTicket(nroTicket,idAgencia);
+
+			return respuesta;
+
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		DataAnulacion dataAnulacionErr = new DataAnulacion();
+		dataAnulacionErr.setError(201);
+		dataAnulacionErr.setMensaje("Error del sistema.");
+		return dataAnulacionErr;
 	}
 }

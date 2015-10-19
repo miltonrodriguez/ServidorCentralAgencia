@@ -15,6 +15,7 @@ import com.uy.antel.xml.respTicket.XmlRes.XmlRespCancelacionTicket;
 import com.uy.antel.xml.ticket.XmlTicket.XmlAltaTicket;
 import com.uy.antel.xml.ticket.XmlTicket.XmlCancelacionTicket;
 
+import antel.com.uy.webservices.DataAnulacion;
 import antel.com.uy.webservices.DataTicket;
 
 public class ctrlCentral {
@@ -91,7 +92,7 @@ public class ctrlCentral {
 		XmlRes respTicket = factory.createXmlRes();
 		try {
 			ctrlWS ws = ctrlWS.getInstance();
-			Date fechaVenta = new Date();
+			Date fechaCancelacion = new Date();
 
 			ICtrValidacion validacion = ctrValidacion.getInstance();
 			Pair<Integer, String> resp = validacion.validarEntradaCancelacionTicket(xmlCancTicket.getNroTicket());
@@ -99,20 +100,20 @@ public class ctrlCentral {
 				// No hubo error al validar los datos de entrada
 				System.out.println("ctrCentral - cancelacionticket - paso las validaciones de entrada");
 				// TODO:seguir esto cuando carlos haga el WS
-//				DataTicket respuesta = ws.cancelacionTicket(xmlCancTicket.getNroTicket(), util.getIdAgencia());
-//				System.out.println("ctrCentral - cancelacionticket - paso la invocacion al ws");
-//
-//				respCancelTicket.setError(respuesta.getError());
-//				respCancelTicket.setMensaje(respuesta.getMensaje());
-//				if (respuesta.getError() == 0) {
-//					// Doy de alta la cancelacion en la BD
-//					System.out.println(
-//							"ctrCentral - cancelacionticket - se va a persistir en la BD de agencia la cancelacion del ticket");
-//					ctrlDAO dao = ctrlDAO.getInstance();
-//					dao.altaCancelacion(xmlCancTicket.getNroTicket(), respuesta.getCodigo(), nroTerminal, fechaVenta);
-//					System.out.println(
-//							"ctrCentral - cancelacionticket - se persistio la cancelacion en la BD de agencia");
-//				}
+				DataAnulacion respuesta = ws.cancelacionTicket(xmlCancTicket.getNroTicket(), util.getIdAgencia());
+				System.out.println("ctrCentral - cancelacionticket - paso la invocacion al ws");
+
+				respCancelTicket.setError(respuesta.getError());
+				respCancelTicket.setMensaje(respuesta.getMensaje());
+				if (respuesta.getError() == 0) {
+					// Doy de alta la cancelacion en la BD
+					System.out.println(
+							"ctrCentral - cancelacionticket - se va a persistir en la BD de agencia la cancelacion del ticket");
+					ctrlDAO dao = ctrlDAO.getInstance();
+					dao.altaCancelacion(xmlCancTicket.getNroTicket(), respuesta.getNroAnulacion(), nroTerminal, fechaCancelacion);
+					System.out.println(
+							"ctrCentral - cancelacionticket - se persistio la cancelacion en la BD de agencia");
+				}
 			} else {
 				// Error de entrada
 				respCancelTicket.setError(resp.getKey());

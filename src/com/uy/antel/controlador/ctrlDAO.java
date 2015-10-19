@@ -67,10 +67,10 @@ public class ctrlDAO {
 			// Existe el auto
 			conn.setAutoCommit(false);
 			PreparedStatement ps_insert_ticket = conn.prepareStatement(
-					"insert into ticket (nroTicket,fechaVenta,fechaIniE,cantMinutos,ImporteTotal,fk_auto,nroTerminal) values (?,?,?,?,?,?)");
+					"insert into ticket (nroTicket,fechaVenta,fechaIniE,cantMinutos,ImporteTotal,fk_auto,nroTerminal) values (?,?,?,?,?,?,?)");
 			ps_insert_ticket.setInt(1, nroTicket);
-			ps_insert_ticket.setDate(2, new java.sql.Date(fechaVenta.getTime()));
-			ps_insert_ticket.setDate(3, new java.sql.Date(fechaIniE.getTime()));
+			ps_insert_ticket.setTimestamp(2, new java.sql.Timestamp(fechaVenta.getTime()));
+			ps_insert_ticket.setTimestamp(3, new java.sql.Timestamp(fechaIniE.getTime()));
 			ps_insert_ticket.setInt(4, cantMinutos);
 			ps_insert_ticket.setInt(5, importeTotal);
 			ps_insert_ticket.setInt(6, rs_auto.getInt("idAuto"));
@@ -213,7 +213,7 @@ public class ctrlDAO {
 				error = new ImmutablePair<Integer, String>(102,
 						"El numero de ticket no corresponde con un ticket vendido por la agencia.");
 			else {
-				if (rs_ticket.getDate("fechaIniE").before(new Date()))
+				if (rs_ticket.getTimestamp("fechaIniE").before(new Date()))
 					error = new ImmutablePair<Integer, String>(103, "El ticket ya fue utilizado.");
 				else {
 					ps_ticket = conn
@@ -258,7 +258,7 @@ public class ctrlDAO {
 				PreparedStatement ps_insert_anulacion = conn
 						.prepareStatement("insert into anulacion (codigo,fecha,nroTerminal) values (?,?,?)");
 				ps_insert_anulacion.setInt(1, codigo);
-				ps_insert_anulacion.setDate(2, (java.sql.Date) fecha);
+				ps_insert_anulacion.setTimestamp(2,new java.sql.Timestamp(fecha.getTime()));
 				ps_insert_anulacion.setInt(3, nroTerminal);
 				ps_insert_anulacion.executeUpdate();
 				rs_ticket.updateInt("fk_anulacion", codigo);

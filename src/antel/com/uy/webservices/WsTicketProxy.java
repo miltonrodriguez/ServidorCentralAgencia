@@ -50,5 +50,11 @@ public class WsTicketProxy implements antel.com.uy.webservices.WsTicket {
     return wsTicket.altaTicket(arg0, arg1, arg2, arg3, arg4);
   }
   
+  public antel.com.uy.webservices.DataAnulacion anulacionTicket(int arg0, java.lang.String arg1) throws java.rmi.RemoteException{
+    if (wsTicket == null)
+      _initWsTicketProxy();
+    return wsTicket.anulacionTicket(arg0, arg1);
+  }
+  
   
 }
