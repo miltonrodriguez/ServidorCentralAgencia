@@ -27,8 +27,6 @@ import com.uy.antel.modelo.BReporteVentaMensualFranja;
 @WebServlet("/Admin/Controlador")
 public class ServletController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	List<BReporteVentaMensualDiaria> ventaMensualDiariaList;
-	List<BReporteVentaMensualFranja> ventaMensualFranjaList;
 
 	@Override
 	public void init() throws ServletException {
@@ -55,46 +53,49 @@ public class ServletController extends HttpServlet {
 			throws ServletException, IOException {
 		Date d = new Date();
 		int anio = d.getYear() + 1900;
-		
+
 		if ("pagReportes".equals(request.getParameter("operacion"))) {
-			
+			List<BReporteVentaMensualDiaria> ventaMensualDiariaList;
 			ctrReportes rep = ctrReportes.getInstance();
-			int mes = d.getMonth()+1;
-			ventaMensualDiariaList = rep.getReporteVentaMensualDiaria(anio,mes);
-			ServletConfig sconfig = getServletConfig();
-			ServletContext sc = sconfig.getServletContext();
-			sc.setAttribute("ventaMensualDiariaList", ventaMensualDiariaList);
-			sc.setAttribute("ventaMensualFranjaList", ventaMensualFranjaList);
+			int mes = d.getMonth() + 1;
+			ventaMensualDiariaList = rep.getReporteVentaMensualDiaria(anio, mes);
+			request.setAttribute("mes", mes);
+			request.setAttribute("anio", anio);
+			request.setAttribute("ventaMensualDiariaList", ventaMensualDiariaList);
+			// request.setAttribute("ventaMensualFranjaList",
+			// ventaMensualFranjaList);
 			RequestDispatcher rd = request.getRequestDispatcher("Reportes.jsp");
-			rd.forward(request, response);
+			rd.include(request, response);
 		} else if ("getReporte".equals(request.getParameter("operacion"))) {
+			List<BReporteVentaMensualDiaria> ventaMensualDiariaList;
 			RequestDispatcher rd = request.getRequestDispatcher("Reportes.jsp");
 			ctrReportes rep = ctrReportes.getInstance();
 
 			// obtengo los parametros del reporte
 			int mes = Integer.parseInt(request.getParameter("optMes"));
 			String tipoReporte = request.getParameter("tipoReporte");
-			String formato = request.getParameter("formato");
 			if ("Diario".equals(tipoReporte)) {
-				if ("html".equals(formato)) {
-					ventaMensualDiariaList = rep.getReporteVentaMensualDiaria(anio,mes);
-					ServletConfig sconfig = getServletConfig();
-					ServletContext sc = sconfig.getServletContext();
-					sc.setAttribute("ventaMensualDiariaList", ventaMensualDiariaList);
-					sc.setAttribute("ventaMensualFranjaList", ventaMensualFranjaList);
-					rd.forward(request, response);
-				}
+
+				ventaMensualDiariaList = rep.getReporteVentaMensualDiaria(anio, mes);
+				request.setAttribute("mes", mes);
+				request.setAttribute("anio", anio);
+				request.setAttribute("ventaMensualDiariaList", ventaMensualDiariaList);
+				// request.setAttribute("ventaMensualFranjaList",
+				// ventaMensualFranjaList);
+				rd.include(request, response);
 
 			} else if ("Franja".equals(tipoReporte)) {
-				if ("html".equals(formato)) {
-					ventaMensualFranjaList = rep.getReporteVentaMensualFranja(anio,mes);
-					request.setAttribute("ventaMensualDiariaList", ventaMensualDiariaList);
-					request.setAttribute("ventaMensualFranjaList", ventaMensualFranjaList);
-					rd.include(request, response);
-				}
+				List<BReporteVentaMensualFranja> ventaMensualFranjaList;
+				ventaMensualFranjaList = rep.getReporteVentaMensualFranja(anio, mes);
+				request.setAttribute("mes", mes);
+				request.setAttribute("anio", anio);
+				// request.setAttribute("ventaMensualDiariaList",
+				// ventaMensualDiariaList);
+				request.setAttribute("ventaMensualFranjaList", ventaMensualFranjaList);
+				rd.include(request, response);
 
 			}
-			
+
 		}
 	}
 
