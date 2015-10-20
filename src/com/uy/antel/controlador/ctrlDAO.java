@@ -305,7 +305,7 @@ public class ctrlDAO {
 		ArrayList<BReporteVentaMensualFranja> reporteMensual = new ArrayList<BReporteVentaMensualFranja>();
         try {
         	Connection conn = getConexion();        	
-        	PreparedStatement ps_reporte = conn.prepareStatement("SELECT MONTH(t.fechaVenta) AS mes, HOUR(t.fechaVenta) AS hora,SUM(t.importeTotal) as importeTotal, count(t.nroTicket) as cantTicket FROM ticket t where  MONTH(t.fechaVenta) = ? AND YEAR(t.fechaVenta)=? AND isnull(t.fk_anulacion) GROUP BY mes, hora ORDER BY dia asc");
+        	PreparedStatement ps_reporte = conn.prepareStatement("SELECT MONTH(t.fechaVenta) AS mes, HOUR(t.fechaVenta) AS hora,SUM(t.importeTotal) as importeTotal, count(t.nroTicket) as cantTicket FROM ticket t where  MONTH(t.fechaVenta) = ? AND YEAR(t.fechaVenta)=? AND isnull(t.fk_anulacion) GROUP BY mes, hora ORDER BY hora asc");
         	ps_reporte.setInt(1, mes);
         	ps_reporte.setInt(2, anio);
         	
