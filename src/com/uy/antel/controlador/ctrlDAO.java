@@ -1,6 +1,12 @@
 package com.uy.antel.controlador;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -9,10 +15,8 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.uy.antel.modelo.BReporteVentaMensualDiaria;
+import com.uy.antel.modelo.BReporteVentaMensualFranja;
 
 public class ctrlDAO {
 
@@ -274,6 +278,48 @@ public class ctrlDAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public ArrayList<BReporteVentaMensualDiaria> getReporteVentaMensualDiaria(int mes, int anio){
+		ArrayList<BReporteVentaMensualDiaria> reporteMensual = new ArrayList<BReporteVentaMensualDiaria>();
+        try {
+        	Connection conn = getConexion();        	
+        	PreparedStatement ps_reporte = conn.prepareStatement("SELECT MONTH(t.fechaVenta) AS mes, DAY(t.fechaVenta) AS dia,SUM(t.importeTotal) as importeTotal, count(t.nroTicket) as cantTicket FROM ticket t where  MONTH(t.fechaVenta) = ? AND YEAR(t.fechaVenta)=? AND isnull(t.fk_anulacion) GROUP BY mes, dia ORDER BY dia asc");
+        	ps_reporte.setInt(1, mes);
+        	ps_reporte.setInt(2, anio);
+        	
+        	ResultSet rs_reporte = ps_reporte.executeQuery();             
+            while (rs_reporte.next()) {            	
+            	reporteMensual.add(new BReporteVentaMensualDiaria(rs_reporte.getInt("dia"),rs_reporte.getInt("importeTotal"),rs_reporte.getInt("cantTicket")));
+            } 
+            rs_reporte.close();                           
+            conn.close();           
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return reporteMensual;
+	}
+	
+	public ArrayList<BReporteVentaMensualFranja> getReporteVentaMensualFranja(int mes, int anio){
+		ArrayList<BReporteVentaMensualFranja> reporteMensual = new ArrayList<BReporteVentaMensualFranja>();
+        try {
+        	Connection conn = getConexion();        	
+        	PreparedStatement ps_reporte = conn.prepareStatement("SELECT MONTH(t.fechaVenta) AS mes, HOUR(t.fechaVenta) AS hora,SUM(t.importeTotal) as importeTotal, count(t.nroTicket) as cantTicket FROM ticket t where  MONTH(t.fechaVenta) = ? AND YEAR(t.fechaVenta)=? AND isnull(t.fk_anulacion) GROUP BY mes, hora ORDER BY dia asc");
+        	ps_reporte.setInt(1, mes);
+        	ps_reporte.setInt(2, anio);
+        	
+        	ResultSet rs_reporte = ps_reporte.executeQuery();             
+            while (rs_reporte.next()) {            	
+            	reporteMensual.add(new BReporteVentaMensualFranja(rs_reporte.getInt("hora"),rs_reporte.getInt("importeTotal"),rs_reporte.getInt("cantTicket")));
+            } 
+            rs_reporte.close();                           
+            conn.close();           
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return reporteMensual;
 	}
 
 }

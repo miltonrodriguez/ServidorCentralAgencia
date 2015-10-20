@@ -2,6 +2,7 @@ package com.uy.antel.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class util {
@@ -47,4 +48,18 @@ public class util {
 	    }
 	    return true;
    }
+	/**
+	 * 
+	 * @param mes
+	 * @param anio
+	 * @return
+	 */
+	public static int getDiasMaxMes(int mes, int anio)
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR,anio);
+		calendar.set(Calendar.MONTH,mes);
+		int days = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		return days;
+	}
 }
