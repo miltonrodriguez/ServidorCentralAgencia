@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Login Servidor Central Agencia</title>
 </head>
 <style type="text/css">
 label {
@@ -15,17 +15,9 @@ label {
 }
 </style>
 <body>
-	<%
-		String resp = (String) request.getAttribute("respuesta");
-		if (resp != null && resp.length() != 0) {
-	%>
-	<h1><%=resp%></h1>
-	<br>
-	<%
-		}
-	%>
-	<h1>Login</h1>
-	<form action="Login">
+	<h1>Login Servidor Central Agencia</h1>
+	<form action="Login" method="post">
+		<input type="hidden" name="operacion" value="login">
 		<label for="usuario">Usuario</label> <input type="text" name="usuario"></input>
 		<br> <label for="password">Password</label> <input
 			type="password" name="password"></input> <br> <input
@@ -33,8 +25,8 @@ label {
 	</form>
 	<br>
 	<br>
-	<br>
-	<br>
-	<a href="Controlador?operacion=pagReportes">Reportes</a>
+	<c:if test="${not empty respuesta}">
+		<h3><c:out value="${respuesta}" /></h3>
+	</c:if>
 </body>
 </html>

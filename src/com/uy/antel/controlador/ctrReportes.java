@@ -1,27 +1,14 @@
 package com.uy.antel.controlador;
 
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.uy.antel.modelo.BReporteVentaMensualDiaria;
 import com.uy.antel.modelo.BReporteVentaMensualFranja;
 import com.uy.antel.util.util;
 
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-
 public class ctrReportes {
 	private static ctrReportes instance;
-	private static String sourceDirName = "";
-
 	private ctrReportes() {
 
 	}

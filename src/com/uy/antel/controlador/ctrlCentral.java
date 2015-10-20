@@ -105,6 +105,7 @@ public class ctrlCentral {
 
 				respCancelTicket.setError(respuesta.getError());
 				respCancelTicket.setMensaje(respuesta.getMensaje());
+				respCancelTicket.setNroCancelacion(respuesta.getNroAnulacion());
 				if (respuesta.getError() == 0) {
 					// Doy de alta la cancelacion en la BD
 					System.out.println(

@@ -47,29 +47,15 @@ public class ServletLogin extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		RequestDispatcher rd = request.getRequestDispatcher("/Admin/Login.jsp");
-		String usuario = request.getParameter("usuario");
-		String password = request.getParameter("password");
-		ctrlDAO dao = ctrlDAO.getInstance();
-		boolean login = false;
-		try {
-			login = dao.login(usuario, password, -1);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (login) {
+		if ("logout".equals(request.getParameter("operacion"))) {
 			HttpSession session = request.getSession();
-			session.setAttribute("UsuarioAgencia", usuario);
-			// setting session to expiry in 30 mins
-			session.setMaxInactiveInterval(30 * 60);
-			// Cookie userCookie = new Cookie("user", usuario);
-			// userCookie.setMaxAge(30*60);
-			// response.addCookie(userCookie);
-			request.setAttribute("respuesta", "loginOK");
+			session.removeAttribute("UsuarioAgencia");
+			RequestDispatcher rd = request.getRequestDispatcher("/Admin/Login.jsp");
+			request.setAttribute("respuesta", "Logout correcto");
 			rd.include(request, response);
-		} else {
-			request.setAttribute("respuesta", "Usuario o contraseña incorrecta");
+		}else {
+			RequestDispatcher rd = request.getRequestDispatcher("/Admin/Login.jsp");
+			request.setAttribute("respuesta", "Operacion Invalida");
 			rd.include(request, response);
 		}
 
@@ -82,7 +68,37 @@ public class ServletLogin extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		if ("login".equals(request.getParameter("operacion"))) {
+			String usuario = request.getParameter("usuario");
+			String password = request.getParameter("password");
+			ctrlDAO dao = ctrlDAO.getInstance();
+			boolean login = false;
+			try {
+				login = dao.login(usuario, password, -1);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (login) {
+				RequestDispatcher rd = request.getRequestDispatcher("Reportes.jsp");
+				HttpSession session = request.getSession();
+				session.setAttribute("UsuarioAgencia", usuario);
+				// setting session to expiry in 30 mins
+				session.setMaxInactiveInterval(30 * 60);
+				// Cookie userCookie = new Cookie("user", usuario);
+				// userCookie.setMaxAge(30*60);
+				// response.addCookie(userCookie);
+				rd.include(request, response);
+			} else {
+				RequestDispatcher rd = request.getRequestDispatcher("/Admin/Login.jsp");
+				request.setAttribute("respuesta", "Usuario o contraseña incorrecta");
+				rd.include(request, response);
+			}
+		}else {
+			RequestDispatcher rd = request.getRequestDispatcher("/Admin/Login.jsp");
+			request.setAttribute("respuesta", "Operacion Invalida");
+			rd.include(request, response);
+		}
 	}
 
 }
