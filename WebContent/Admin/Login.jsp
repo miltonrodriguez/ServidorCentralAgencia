@@ -8,26 +8,33 @@
 <title>Insert title here</title>
 </head>
 <style type="text/css">
-label {display: block;width: 150px;float: left;}
+label {
+	display: block;
+	width: 150px;
+	float: left;
+}
 </style>
 <body>
-<% 
-	String resp = (String)request.getAttribute("respuesta");
-if (resp!= null && resp.length() != 0)
-{%>
+	<%
+		String resp = (String) request.getAttribute("respuesta");
+		if (resp != null && resp.length() != 0) {
+	%>
 	<h1><%=resp%></h1>
-	<br>	
-<%
-}
-%>
+	<br>
+	<%
+		}
+	%>
 	<h1>Login</h1>
 	<form action="Login">
 		<label for="usuario">Usuario</label> <input type="text" name="usuario"></input>
-		<br> 
-		<label for="password">Password</label> <input type="password" name="password"></input>
-		<br>
-		<input type="submit" value="Ingresar"></input>
+		<br> <label for="password">Password</label> <input
+			type="password" name="password"></input> <br> <input
+			type="submit" value="Ingresar"></input>
 	</form>
-
+	<br>
+	<br>
+	<br>
+	<br>
+	<a href="Controlador?operacion=pagReportes">Reportes</a>
 </body>
 </html>

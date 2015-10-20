@@ -58,8 +58,9 @@ public class util {
 	{
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR,anio);
-		calendar.set(Calendar.MONTH,mes);
+		calendar.set(Calendar.MONTH,mes-1);
 		int days = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		System.out.println("Fecha maximo dias: " +calendar);
 		return days;
 	}
 }

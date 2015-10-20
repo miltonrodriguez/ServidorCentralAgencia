@@ -80,34 +80,34 @@ public  class MBReportes extends AbstractReportBean{
 	}
 	
 	
-	public String exportar(String tipo, int mes){		 	 
-		 try {			 
-			 AccionReporte tipo_enum = AccionReporte.valueOf(tipo);
-			 JRBeanCollectionDataSource beanColDataSource = null;
-			 if (tipo_enum == AccionReporte.DIARIO){
-				 COMPILE_FILE_NAME = "ReporteVentaMensualDiario";				 
-				 List<BReporteVentaMensualDiaria> dataList = ctrReportes.getInstance().getReporteVentaMensualDiaria(anio, mes);                   
-				 beanColDataSource = new JRBeanCollectionDataSource(dataList);			      
-			  }else if (tipo_enum == AccionReporte.FRANJAS){
-				  COMPILE_FILE_NAME = "ReportePorFecha";
-				  List<BReporteVentaMensualFranja> dataList = ctrReportes.getInstance().getReporteVentaMensualFranja(anio, mes);                 
-				  beanColDataSource = new JRBeanCollectionDataSource(dataList);			      
-			 }			 
-			 super.prepareReport(beanColDataSource);
-	        } catch (Exception e) {
-	        	e.printStackTrace();
-	        }
-		 return null;
-	 }
-	 
-	 public String filtrar(){		 	 
-		 try {
-			 	getReportePorFecha();
-	        } catch (Exception e) {
-	        	e.printStackTrace();
-	        }
-		 return null;
-	 }
+//	public String exportar(String tipo, int mes){		 	 
+//		 try {			 
+//			 AccionReporte tipo_enum = AccionReporte.valueOf(tipo);
+//			 JRBeanCollectionDataSource beanColDataSource = null;
+//			 if (tipo_enum == AccionReporte.DIARIO){
+//				 COMPILE_FILE_NAME = "ReporteVentaMensualDiario";				 
+//				 List<BReporteVentaMensualDiaria> dataList = ctrReportes.getInstance().getReporteVentaMensualDiaria(anio, mes);                   
+//				 beanColDataSource = new JRBeanCollectionDataSource(dataList);			      
+//			  }else if (tipo_enum == AccionReporte.FRANJAS){
+//				  COMPILE_FILE_NAME = "ReportePorFecha";
+//				  List<BReporteVentaMensualFranja> dataList = ctrReportes.getInstance().getReporteVentaMensualFranja(anio, mes);                 
+//				  beanColDataSource = new JRBeanCollectionDataSource(dataList);			      
+//			 }			 
+//			 super.prepareReport(beanColDataSource);
+//	        } catch (Exception e) {
+//	        	e.printStackTrace();
+//	        }
+//		 return null;
+//	 }
+//	 
+//	 public String filtrar(){		 	 
+//		 try {
+//			 	getReportePorFecha();
+//	        } catch (Exception e) {
+//	        	e.printStackTrace();
+//	        }
+//		 return null;
+//	 }
 	
 	
 }

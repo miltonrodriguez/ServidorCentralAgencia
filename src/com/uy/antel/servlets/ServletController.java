@@ -2,6 +2,8 @@ package com.uy.antel.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -14,7 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.uy.antel.controlador.ctrReportes;
 import com.uy.antel.controlador.ctrlDAO;
+import com.uy.antel.modelo.BReporteVentaMensualDiaria;
+import com.uy.antel.modelo.BReporteVentaMensualFranja;
 
 /**
  * Servlet implementation class ServletController
@@ -22,6 +27,8 @@ import com.uy.antel.controlador.ctrlDAO;
 @WebServlet("/Admin/Controlador")
 public class ServletController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	List<BReporteVentaMensualDiaria> ventaMensualDiariaList;
+	List<BReporteVentaMensualFranja> ventaMensualFranjaList;
 
 	@Override
 	public void init() throws ServletException {
@@ -46,36 +53,49 @@ public class ServletController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-	
-		if ("login".equals(request.getParameter("operacion"))) {
-			RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
-			String usuario = request.getParameter("usuario");
-			String password = request.getParameter("password");
-			ctrlDAO dao = ctrlDAO.getInstance();
-			boolean login = false;
-			try {
-				login = dao.login(usuario, password, -1);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
-			if(login){
-				HttpSession session = request.getSession();
-	            session.setAttribute("UsuarioAgencia",usuario );
-	            //setting session to expiry in 30 mins
-	            session.setMaxInactiveInterval(30*60);
-//	            Cookie userCookie = new Cookie("user", usuario);
-//	            userCookie.setMaxAge(30*60);
-//	            response.addCookie(userCookie);
-	            request.setAttribute("respuesta", "loginOK");
-				rd.forward(request, response);
-			}
-			else{
-				request.setAttribute("respuesta", "Usuario o contraseña incorrecta");
-				rd.forward(request, response);
-			}
-		}
+		Date d = new Date();
+		int anio = d.getYear() + 1900;
+		
+		if ("pagReportes".equals(request.getParameter("operacion"))) {
+			
+			ctrReportes rep = ctrReportes.getInstance();
+			int mes = d.getMonth()+1;
+			ventaMensualDiariaList = rep.getReporteVentaMensualDiaria(anio,mes);
+			ServletConfig sconfig = getServletConfig();
+			ServletContext sc = sconfig.getServletContext();
+			sc.setAttribute("ventaMensualDiariaList", ventaMensualDiariaList);
+			sc.setAttribute("ventaMensualFranjaList", ventaMensualFranjaList);
+			RequestDispatcher rd = request.getRequestDispatcher("Reportes.jsp");
+			rd.forward(request, response);
+		} else if ("getReporte".equals(request.getParameter("operacion"))) {
+			RequestDispatcher rd = request.getRequestDispatcher("Reportes.jsp");
+			ctrReportes rep = ctrReportes.getInstance();
 
+			// obtengo los parametros del reporte
+			int mes = Integer.parseInt(request.getParameter("optMes"));
+			String tipoReporte = request.getParameter("tipoReporte");
+			String formato = request.getParameter("formato");
+			if ("Diario".equals(tipoReporte)) {
+				if ("html".equals(formato)) {
+					ventaMensualDiariaList = rep.getReporteVentaMensualDiaria(anio,mes);
+					ServletConfig sconfig = getServletConfig();
+					ServletContext sc = sconfig.getServletContext();
+					sc.setAttribute("ventaMensualDiariaList", ventaMensualDiariaList);
+					sc.setAttribute("ventaMensualFranjaList", ventaMensualFranjaList);
+					rd.forward(request, response);
+				}
+
+			} else if ("Franja".equals(tipoReporte)) {
+				if ("html".equals(formato)) {
+					ventaMensualFranjaList = rep.getReporteVentaMensualFranja(anio,mes);
+					request.setAttribute("ventaMensualDiariaList", ventaMensualDiariaList);
+					request.setAttribute("ventaMensualFranjaList", ventaMensualFranjaList);
+					rd.include(request, response);
+				}
+
+			}
+			
+		}
 	}
 
 	/**
