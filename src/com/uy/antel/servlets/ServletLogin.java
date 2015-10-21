@@ -2,6 +2,8 @@ package com.uy.antel.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -14,7 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.uy.antel.controlador.ctrReportes;
 import com.uy.antel.controlador.ctrlDAO;
+import com.uy.antel.modelo.BReporteVentaMensualDiaria;
 
 /**
  * Servlet implementation class ServletController
@@ -85,9 +89,17 @@ public class ServletLogin extends HttpServlet {
 				session.setAttribute("UsuarioAgencia", usuario);
 				// setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30 * 60);
-				// Cookie userCookie = new Cookie("user", usuario);
-				// userCookie.setMaxAge(30*60);
-				// response.addCookie(userCookie);
+				Date d = new Date();
+				int anio = d.getYear() + 1900;
+				int mes = d.getMonth() + 1;
+				ctrReportes rep = ctrReportes.getInstance();
+				List<BReporteVentaMensualDiaria> ventaMensualDiariaList = rep.getReporteVentaMensualDiaria(anio, mes);
+				request.setAttribute("mes", mes);
+				request.setAttribute("anio", anio);
+				request.setAttribute("ventaMensualDiariaList", ventaMensualDiariaList);
+				
+				
+				
 				rd.include(request, response);
 			} else {
 				RequestDispatcher rd = request.getRequestDispatcher("/Admin/Login.jsp");
