@@ -252,7 +252,7 @@ public class ctrlDAO {
 		Connection conn = getConexion();
 		PreparedStatement ps_ticket;
 		try {
-			ps_ticket = conn.prepareStatement("select * from ticket where nroTicket = ?");
+			ps_ticket = conn.prepareStatement("select * from ticket where nroTicket = ?",ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 			ps_ticket.setInt(1, nroTicket);
 			ResultSet rs_ticket = ps_ticket.executeQuery();
 			if (rs_ticket.next()) {
@@ -265,6 +265,7 @@ public class ctrlDAO {
 				ps_insert_anulacion.setInt(3, nroTerminal);
 				ps_insert_anulacion.executeUpdate();
 				rs_ticket.updateInt("fk_anulacion", codigo);
+				rs_ticket.updateRow();
 				conn.commit();
 				conn.setAutoCommit(true);
 				ps_insert_anulacion.close();
