@@ -62,9 +62,9 @@ public class ctrReportes {
 		}
 
 		for (int i = 0; i < 24; i++) {
-			if (((reporteMensual.size()>i) && (reporteMensual.get(i).getHora() != i+1))||(reporteMensual.size()<=i)) {
+			if (((reporteMensual.size()>i) && (reporteMensual.get(i).getHora() != i))||(reporteMensual.size()<=i)) {
 				// Si no esta agrego uno con 0
-				BReporteVentaMensualFranja nuevo = new BReporteVentaMensualFranja(i+1, 0, 0);
+				BReporteVentaMensualFranja nuevo = new BReporteVentaMensualFranja(i, 0, 0);
 				reporteMensual.add(i, nuevo);
 			}
 
